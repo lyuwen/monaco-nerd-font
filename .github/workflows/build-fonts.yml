@@ -64,8 +64,8 @@ jobs:
         with:
           # Filename for archive
           filename: monaco.zip # default is release.zip
-          # Working directory before zipping
-          directory: monaco # optional, default is .
+          # directory to zip
+          path: monaco
           # Tool to use for archiving
           type: 'zip' # optional, default is zip
       - name: Create Release
