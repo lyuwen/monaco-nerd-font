@@ -7,6 +7,7 @@ on:
   # Triggers the workflow on push or pull request events but only for the "main" branch
   push:
     branches: [ "main" ]
+    tags: ["v*"]
   pull_request:
     branches: [ "main" ]
 
@@ -45,3 +46,45 @@ jobs:
           # A file, directory or wildcard pattern that describes what to upload
           path: ${{ github.workspace }}/patched/Monaco
           # The desired behavior if no files are found using the provided path.
+          
+  create-release:
+    needs: build
+    runs-on: ubuntu-latest
+    if: ${{ github.ref_type = 'tag' }}
+    steps:
+      - name: Download a Build Artifact
+        uses: actions/download-artifact@v3.0.0
+        with:
+          # Artifact name
+          name: monaco # optional
+          # Destination path
+          path: monaco # optional
+      - name: Zip Release
+        uses: TheDoctor0/zip-release@0.6.2
+        with:
+          # Filename for archive
+          filename: monaco.zip # default is release.zip
+          # Working directory before zipping
+          directory: monaco # optional, default is .
+          # Tool to use for archiving
+          type: 'zip' # optional, default is zip
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          draft: true
+          prerelease: false
+      - name: Upload Release Asset
+        id: upload-release-asset 
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
+          asset_path: ./monaco.zip
+          asset_name: monaco.zip
+          asset_content_type: application/zip
