@@ -50,7 +50,7 @@ jobs:
   create-release:
     needs: build
     runs-on: ubuntu-latest
-    if: ${{ github.ref_type = 'tag' }}
+    if: ${{ github.ref_type == 'tag' }}
     steps:
       - name: Download a Build Artifact
         uses: actions/download-artifact@v3.0.0
