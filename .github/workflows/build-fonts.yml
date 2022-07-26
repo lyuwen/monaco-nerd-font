@@ -28,14 +28,14 @@ jobs:
       # Runs a set of commands using the runners shell
       - name: Create direcntory
         run: mkdir -p ${{ github.workspace }}/patched/Monaco
-      
 
       - uses: addnab/docker-run-action@v3
         with:
           image: nerdfonts/patcher
-          options: -v ${{ github.workspace }}/unpatched/Monaco:/in -v ${{ github.workspace }}/patched/Monaco:/out 
-          run: /bin/sh /nerd/bin/scripts/docker-entrypoint.sh -s -w --powerline --complete --careful --progressbars
-          
+          options: |
+            -v ${{ github.workspace }}/unpatched/Monaco:/in -v ${{ github.workspace }}/patched/Monaco:/out 
+          run: |
+            fontforge -script /nerd/font-patcher -out /out -s -w --powerline --complete --progressbars /in/Monaco.ttf
 
       - name: Upload a Build Artifact
         uses: actions/upload-artifact@v3.1.0
