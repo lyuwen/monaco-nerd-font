@@ -32,7 +32,7 @@ jobs:
 
       - uses: addnab/docker-run-action@v3
         with:
-          image: nerdfonts/patcher
+          image: nerdfonts/patcher:latest
           options: |
             -v ${{ github.workspace }}/unpatched/Monaco:/in -v ${{ github.workspace }}/patched/Monaco:/out 
           run: |
