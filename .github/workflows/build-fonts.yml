@@ -30,7 +30,8 @@ jobs:
       - name: Create direcntory
         run: mkdir -p ${{ github.workspace }}/patched/Monaco
 
-      - uses: addnab/docker-run-action@v3
+      - name: build mono font without ligatures
+        uses: addnab/docker-run-action@v3
         with:
           image: nerdfonts/patcher:latest
           options: |
@@ -38,11 +39,30 @@ jobs:
           run: |
             fontforge -script /nerd/font-patcher -out /out -s --removeligs --powerline --powerlineextra --material --fontawesome --weather --fontlogos  --complete --progressbars /in/Monaco.ttf
 
-      - uses: addnab/docker-run-action@v3
+      - name: build non-mono font without ligatures
+        uses: addnab/docker-run-action@v3
         with:
           image: nerdfonts/patcher:latest
           options: |
             -v ${{ github.workspace }}/unpatched/Monaco:/in -v ${{ github.workspace }}/patched/Monaco:/out 
+          run: |
+            fontforge -script /nerd/font-patcher -out /out --removeligs --powerline --powerlineextra --material --fontawesome --weather --fontlogos  --complete --progressbars /in/Monaco.ttf
+
+      - name: build mono font with ligatures
+        uses: addnab/docker-run-action@v3
+        with:
+          image: nerdfonts/patcher:latest
+          options: |
+            -v ${{ github.workspace }}/unpatched/Monaco-ligs:/in -v ${{ github.workspace }}/patched/Monaco-ligs:/out 
+          run: |
+            fontforge -script /nerd/font-patcher -out /out -s --removeligs --powerline --powerlineextra --material --fontawesome --weather --fontlogos  --complete --progressbars /in/Monaco.ttf
+
+      - name: build non-mono font with ligatures
+        uses: addnab/docker-run-action@v3
+        with:
+          image: nerdfonts/patcher:latest
+          options: |
+            -v ${{ github.workspace }}/unpatched/Monaco-ligs:/in -v ${{ github.workspace }}/patched/Monaco-ligs:/out 
           run: |
             fontforge -script /nerd/font-patcher -out /out --removeligs --powerline --powerlineextra --material --fontawesome --weather --fontlogos  --complete --progressbars /in/Monaco.ttf
 
@@ -52,7 +72,7 @@ jobs:
           # Artifact name
           name: monaco # optional, default is artifact
           # A file, directory or wildcard pattern that describes what to upload
-          path: ${{ github.workspace }}/patched/Monaco
+          path: ${{ github.workspace }}/patched
           # The desired behavior if no files are found using the provided path.
           
   create-release:
