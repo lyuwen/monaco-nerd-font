@@ -36,7 +36,7 @@ jobs:
           options: |
             -v ${{ github.workspace }}/unpatched/Monaco:/in -v ${{ github.workspace }}/patched/Monaco:/out 
           run: |
-            fontforge -script /nerd/font-patcher -out /out -s -w --powerline --complete --progressbars /in/Monaco.ttf
+            fontforge -script /nerd/font-patcher -out /out -s --powerline --powerlineextra --material --fontawesome --weather --fontlogos  --complete --progressbars /in/Monaco.ttf
 
       - name: Upload a Build Artifact
         uses: actions/upload-artifact@v3.1.0
