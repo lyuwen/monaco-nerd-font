@@ -37,7 +37,7 @@ jobs:
           options: |
             -v ${{ github.workspace }}/unpatched/Monaco:/in -v ${{ github.workspace }}/patched/Monaco:/out 
           run: |
-            fontforge -script /nerd/font-patcher -out /out -s --removeligs --powerline --powerlineextra --material --fontawesome --weather --fontlogos  --complete --progressbars /in/Monaco.ttf
+            fontforge -script /nerd/font-patcher -out /out -s --removeligs --powerline --powerlineextra --material --fontawesome --weather --fontlogos  --complete --progressbars /in/Monaco-noligs.ttf
 
       - name: build non-mono font without ligatures
         uses: addnab/docker-run-action@v3
@@ -46,7 +46,7 @@ jobs:
           options: |
             -v ${{ github.workspace }}/unpatched/Monaco:/in -v ${{ github.workspace }}/patched/Monaco:/out 
           run: |
-            fontforge -script /nerd/font-patcher -out /out --removeligs --powerline --powerlineextra --material --fontawesome --weather --fontlogos  --complete --progressbars /in/Monaco.ttf
+            fontforge -script /nerd/font-patcher -out /out --removeligs --powerline --powerlineextra --material --fontawesome --weather --fontlogos  --complete --progressbars /in/Monaco-noligs.ttf
 
       - name: build mono font with ligatures
         uses: addnab/docker-run-action@v3
